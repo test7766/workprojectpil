@@ -1,0 +1,37 @@
+﻿<Window x:Class="FindRestOfItemsWindows.ExportExelDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FindRestOfItemsWindows"
+       xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="Експорт в Exel" Height="155" Width="450">
+   
+        <Grid Margin="10" ShowGridLines="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center">Оберіть бажанний спосіб експорту</TextBlock>
+            <TextBlock Grid.Row="1" HorizontalAlignment="Left" FontSize="9" FontStyle="Italic">Якщо активовані фільтри , експорт буде в межах фільтрів
+            </TextBlock>
+
+
+            <WrapPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,15,0,0">
+                <dxb:ToolBarControl  BarItemDisplayMode="ContentAndGlyph" UseWholeRow="True" ShowDragWidget="False" AllowCustomizationMenu="False" AllowHide="False" AllowQuickCustomization="False" >
+                    <dxb:BarButtonItem x:Name="Allpages"    Glyph="{dx:DXImage Image=DifferentOddEvenPages_32x32.png}" RibbonStyle="Default" GlyphAlignment="Left" ItemClick="CurrentlePage_ItemClick" Content="Всі сторінки" LargeGlyph="{dx:DXImage Image=DifferentOddEvenPages_32x32.png}"/>
+                <dxb:BarItemSeparator/>
+                <dxb:BarButtonItem x:Name="CurrentlePage"    Glyph="{dx:DXImage Image=PageOrientationPortrait_32x32.png}" RibbonStyle="Default" GlyphAlignment="Left" ItemClick="CurrentlePage_ItemClick" Content="Поточну сторінку" LargeGlyph="{dx:DXImage Image=PageOrientationPortrait_32x32.png}"/>
+                <dxb:BarItemSeparator/>
+                <dxb:BarButtonItem x:Name="CanselPages"    Glyph="{dx:DXImage Image=Cancel_16x16.png}" RibbonStyle="Default" GlyphAlignment="Left" ItemClick="CanselPages_ItemClick" Content="Cкасувати" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}"/>
+                </dxb:ToolBarControl>
+
+            </WrapPanel>
+
+        </Grid>
+  
+</Window>
