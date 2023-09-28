@@ -74,6 +74,7 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\FindRestOfItemsWindows.e
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\FindRestOfItemsWindows.exe
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\FindRestOfItemsWindows.pdb
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Data.v17.1.dll
+C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Images.v17.1.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Mvvm.v17.1.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Printing.v17.1.Core.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Core.v17.1.dll
@@ -83,6 +84,8 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Grid.v17.
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Layout.v17.1.Core.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.LayoutControl.v17.1.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Ribbon.v17.1.dll
+C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\EntityFramework.dll
+C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\EntityFramework.SqlServer.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Pdf.v17.1.Core.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.CodeParser.v17.1.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Data.v17.1.xml
@@ -95,6 +98,8 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Grid.v17.
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Layout.v17.1.Core.xml
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.LayoutControl.v17.1.xml
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Xpf.Ribbon.v17.1.xml
+C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\EntityFramework.xml
+C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\EntityFramework.SqlServer.xml
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Pdf.v17.1.Core.xml
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\de\DevExpress.Data.v17.1.resources.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\es\DevExpress.Data.v17.1.resources.dll
@@ -128,11 +133,13 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\de\DevExpress.Pdf.v17.1.
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\es\DevExpress.Pdf.v17.1.Core.resources.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\ja\DevExpress.Pdf.v17.1.Core.resources.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\ru\DevExpress.Pdf.v17.1.Core.resources.dll
+C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\ExportExelDialog.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\MainWindow.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\App.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows_MarkupCompile.cache
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows_MarkupCompile.lref
+C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\ExportExelDialog.baml
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\MainWindow.baml
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.g.resources
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.Properties.Resources.resources
@@ -141,7 +148,3 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.c
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csproj.CopyComplete
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.exe
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.pdb
-C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\ExportExelDialog.g.cs
-C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\DevExpress.Images.v17.1.dll
-C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\ExportExelDialog.baml
-C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csprojAssemblyReference.cache

@@ -6,8 +6,11 @@ using FindRestOfItemsWindows.Model;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,12 +21,14 @@ namespace FindRestOfItemsWindows
     public partial class MainWindow : Window
     {
 
-        pr_GetItemLedger_Result[] FoundResltFiltrProcedureDetails;
-        private int pageSize = 5;
+        private pr_GetItemLedger_Result[] GetItemsOfProcedureAll = null; //  first result from procedure
+        private pr_GetItemLedger_Result _pr_GetItemLedgerFoundField; //switch
+        private pr_GetItemLedger_Result[] FoundResltFiltrProcedureDetails; //result for filter
+        private int pageSize = 25;
         private int currentPage = 1;
-
-        public static pr_GetItemLedger_Result[] GetItemsOfProcedureAll = DataSeed.pr_GetItemLedger_Results_procedure.ToArray();
-        public static pr_GetItemLedger_Result[] SerachItemMoveDeatail = null;
+        private ObservableCollection<pr_GetItemLedger_Result> PartDataGrid = new ObservableCollection<pr_GetItemLedger_Result>();
+        private int CurrentIndexData = 0;
+        private int BuferSizeData = 25;
 
 
 
@@ -45,19 +50,9 @@ namespace FindRestOfItemsWindows
             txtEditLOTN.Text = _LOTN.Trim();                  //партия            char(30)
             txteditLOCN.Text = _LOCN.Trim();                   // Место склада     char(20)
 
-
         }
 
 
-
-        private void UpdateGridData(pr_GetItemLedger_Result[] currntData)
-        {
-            int startIndex = (currentPage - 1) * pageSize;
-            int endIndex = Math.Min(startIndex + pageSize, currntData.Length);
-            var pageData = currntData.Skip(startIndex).Take(endIndex - startIndex).ToList();
-            ItemsMoveRest.ItemsSource = pageData;
-            pageInfoText.Text = $"Сторінка {currentPage} iз {Math.Ceiling((double)currntData.Length / pageSize)}";
-        }
 
 
 
@@ -195,63 +190,19 @@ namespace FindRestOfItemsWindows
 
         #endregion
 
-        //search btn click
-        private void BTN_Search_History_Of_Remnants_Click(object sender, ItemClickEventArgs e)
-        {
-
-            if (string.IsNullOrEmpty(txtEditLOTN.Text) && string.IsNullOrEmpty(txtEditLOTN.Text))
-            {
-                MessageBox.Show("Або місце або партія повинні бути вказані!");
-                return;
-            }
 
 
 
-            int.TryParse(txtEditITM.Text.ToString(), out int ITM);      //id товара         int
-            string MCU = txtEditMCU.Text.ToString();                //id склада         char(12)
-            string LOTN = txtEditLOTN.Text.ToString();              //партия            char(30)
-            string LOCN = txteditLOCN.Text.ToString();              // Место склада     char(20)
-
-
-            FindRestOfItemLoadingDecorator.IsSplashScreenShown = true;
-            //  RestitemMoveData = GetItemDetails(ITM, MCU, LOTN, LOCN).ToList();
-            GetItemsOfProcedureAll = DataSeed.pr_GetItemLedger_Results_procedure.ToArray();
-            FindRestOfItemLoadingDecorator.IsSplashScreenShown = false;
-
-            if (!GetItemsOfProcedureAll.Any())
-                MessageBox.Show($"Історії переміщень не знайденно!", "Увага!", MessageBoxButton.OK, MessageBoxImage.Warning);
-            else
-            {
-                ItemsMoveRest.IsEnabled = true;
-                PanelFiltrPagination.IsEnabled = true;
-                ItemsMoveRest.ItemsSource = GetItemsOfProcedureAll;
-                (ItemsMoveRest.View as TableView).BestFitColumns();
-            }
-
-            UpdateGridData(GetItemsOfProcedureAll);
-
-
-        }
-
-        private void BTN_Clear_TableeResult_Click(object sender, ItemClickEventArgs e)
-        {
-            ItemsMoveRest.ItemsSource = null;
-            PanelFiltrPagination.IsEnabled = false;
-            ItemsMoveRest.IsEnabled = false;
-        }
-        //clearGrid
-        private void Refresh_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+      
+        
+    
 
 
 
-
-
-        //export
-        private void ExportSelectFindRestOfItems_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ItemsMoveRest.ItemsSource != null;
 
 
         // GET Data 
-        public static pr_GetItemLedger_Result[] GetItemDetails(int? ITM, string mCU, string lOTN, string lOCN)
+        public  pr_GetItemLedger_Result[] GetItemDetails(int? ITM, string mCU, string lOTN, string lOCN)
         {
             try
             {
@@ -267,15 +218,153 @@ namespace FindRestOfItemsWindows
             }
             catch (Exception ex) { throw ex; }
 
-            return SerachItemMoveDeatail;
+            return GetItemsOfProcedureAll;
         }
 
 
 
 
 
+        #region SearchRestOfItems search BTN
+
+        private async void BTN_Search_REST_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+            if (string.IsNullOrEmpty(txtEditLOTN.Text) && string.IsNullOrEmpty(txtEditLOTN.Text))
+            {
+                MessageBox.Show("Або місце або партія повинні бути вказані!");
+                return;
+            }
+
+            int.TryParse(txtEditITM.Text.ToString(), out int ITM);      //id товара         int
+            string MCU = txtEditMCU.Text.ToString();                //id склада         char(12)
+            string LOTN = txtEditLOTN.Text.ToString();              //партия            char(30)
+            string LOCN = txteditLOCN.Text.ToString();              // Место склада     char(20)
+            await LoadDataAsync(ITM, MCU, LOTN, LOCN);
+            HandleSearchResult(GetItemsOfProcedureAll);
+
+        }
+        #endregion
+
+
+
+
+
+        private void BTN_Clear_TableeResult_Click(object sender, ItemClickEventArgs e)
+        {
+            ItemsMoveRest.ItemsSource = null;
+            PanelFiltrPagination.IsEnabled = false;
+            ItemsMoveRest.IsEnabled = false;
+        }
+        //clearGrid
+        private void Refresh_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+        //export
+        private void ExportSelectFindRestOfItems_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ItemsMoveRest.ItemsSource != null;
+
+
+
+
+
+
+        #region GetDataFromProcedure
+        public async Task LoadDataAsync(int ITM, string MCU, string LOTN, string LOCN)
+        {
+            try
+            {
+                FindRestOfItemLoadingDecorator1.DeferedVisibility = true;
+
+                //var ResultItemsFromProcedureMethodTemp = await Task.Run(async () =>
+                //{
+                //    using (var entity = new JDE_PROD_GetDataProcedure())
+                //    {
+                //        ((IObjectContextAdapter)entity).ObjectContext.CommandTimeout = 200;
+                //        return await entity.pr_GetItemLedgerAsync(ITM, MCU, lOCN: LOCN, lOTN: LOTN);
+
+                //    }
+                //});
+
+              //  GetItemsOfProcedureAll = ResultItemsFromProcedureMethodTemp.ToArray();
+                GetItemsOfProcedureAll = DataSeed.pr_GetItemLedger_Results_procedure.ToArray();
+                if (!GetItemsOfProcedureAll.Any())
+                {
+                    MessageBox.Show($"Історії переміщень не знайденно!", "Увага!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    FindRestOfItemLoadingDecorator1.DeferedVisibility = false;
+                    LoadNextBatch();
+                    ItemsMoveRest.IsEnabled = true;
+                    PanelFiltrPagination.IsEnabled = true;
+                    ItemsMoveRest.ItemsSource = PartDataGrid;
+                    (ItemsMoveRest.View as TableView).BestFitColumns();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        #endregion
+
+
+
+
+
+
+        #region TakePartDataFromProcedureAndLoadDataGrid
+        private void LoadNextBatch()
+        {
+            PartDataGrid.Clear();
+            var batch = GetItemsOfProcedureAll.Skip(CurrentIndexData).Take(BuferSizeData);
+            foreach (var item in batch)
+                PartDataGrid.Add(item);
+        }
+        #endregion
+
+
+
+
+
+
+
+
+
+
         #region PAGInaTION
-       
+        #region PagingSTART|UPDATE_DATA
+        private void UpdateGridData(pr_GetItemLedger_Result[] currntData)
+        {
+
+            int startIndex = (currentPage - 1) * pageSize;
+            int endIndex = Math.Min(startIndex + pageSize, currntData.Length);
+            var pageData = currntData.Skip(startIndex).Take(endIndex - startIndex);
+            ItemsMoveRest.ItemsSource = pageData;
+            ItemsMoveRest.RefreshData();
+            pageInfoText.Text = $"Сторінка {currentPage} iз {Math.Ceiling((double)currntData.Length / pageSize)}";
+        }
+        #endregion
+        #region Chekbox_checking_elements_on_the_page
+        private void HandleSearchResult(pr_GetItemLedger_Result[] _getTemplateDataFullOrEmpty)
+        {
+            currentPage = 1;
+            if (CheckMax.IsChecked != true)
+            {
+                pageSize = _getTemplateDataFullOrEmpty.Length;
+                UpdateGridData(_getTemplateDataFullOrEmpty);
+                tolbarArrow.IsEnabled = false;
+            }
+            else
+            {
+                int.TryParse(SplitEdita.Text, out pageSize);
+                UpdateGridData(_getTemplateDataFullOrEmpty);
+                tolbarArrow.IsEnabled = true;
+            }
+        }
+
+
+
+
+        #endregion
         #region HomeBTN_PAGING <<--
         private void BTN_Home_Click(object sender, ItemClickEventArgs e)
         {
@@ -307,7 +396,7 @@ namespace FindRestOfItemsWindows
         #region Next BTN -->
         private void BTN_Next_Click(object sender, ItemClickEventArgs e)
         {
-            //if FoundResltProcedure = FoundResltProcedure or GetItemsOfProcedureAll
+            //if FoundResltProcedure = FoundResltProcedure or SerachItemMoveDeatail
             if (currentPage < Math.Ceiling((double)((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ? FoundResltFiltrProcedureDetails : GetItemsOfProcedureAll).Length / pageSize))
             {
                 BTN_Previous_Name.IsEnabled = true;
@@ -338,40 +427,43 @@ namespace FindRestOfItemsWindows
         #endregion
 
 
+        #region BTN_OK 
+        ///user click counts of elements (if found item)--->HandleSearchResult
 
-
-
-
-
-
-
-
-
-
-
-
-        ///user click (if found item)--->HandleSearchResult
         private void ShowUsercount_ItemClick(object sender, ItemClickEventArgs e) =>
             HandleSearchResult((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ? FoundResltFiltrProcedureDetails : GetItemsOfProcedureAll);
 
-        //Resetsearch
-        private void ResetUserSearch_ItemClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
+        private void SplitEdita_KeyDown(object sender, KeyEventArgs e)
         {
-            BTN_Home_Name.IsEnabled = false;
-            BTN_Previous_Name.IsEnabled = false;
-            BTN_Next_Name.IsEnabled = false;
-            BTN_End_Name.IsEnabled = false;
+            if (e.Key == Key.Enter)
+                HandleSearchResult((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ? FoundResltFiltrProcedureDetails : GetItemsOfProcedureAll);
+        }
+        #endregion
+
+
+
+
+
+
+
+        #region ReseT_And_Clear_Filter
+        private void ResetUserSearch_ItemClick(object sender, ItemClickEventArgs e)
+        {
             SplitEdita.IsEnabled = false;
-            pageSize = 5;
+            pageSize = GetItemsOfProcedureAll.Length;
             currentPage = 1;
             SplitEdita.MinValue = 5;
-            SplitEdita.EditValue = 5;
+            SplitEdita.EditValue = 25;
             FoundResltFiltrProcedureDetails = null;
             CheckMax.IsChecked = false;
             DependencyPropertyClass DPObjects = (DependencyPropertyClass)Resources["KeyDependency"];
             SetPropertiesToNull(DPObjects);
+            tolbarArrow.IsEnabled = false;
             UpdateGridData(GetItemsOfProcedureAll);
         }
+
+
+
 
         ////DependencyObjects_SET_NuLL
         public void SetPropertiesToNull(DependencyObject obj)
@@ -391,45 +483,27 @@ namespace FindRestOfItemsWindows
         }
 
 
-
-        private void CheckMax_EditValueChanged_1(object sender, EditValueChangedEventArgs e) => SplitEdita.IsEnabled = CheckMax.IsChecked == false ? true : false;
-
-
-
-        private void HandleSearchResult(pr_GetItemLedger_Result[] _getTemplateDataFullOrEmpty)
-        {
-
-            if (CheckMax.IsChecked != true)
-            {
-                int.TryParse(SplitEdita.Text, out pageSize);
-                currentPage = 1;
-                UpdateGridData(_getTemplateDataFullOrEmpty);
-                tolbarArrow.IsEnabled = true;
-            }
-            else
-            {
-                currentPage = 1;
-                pageSize = _getTemplateDataFullOrEmpty.Length;
-                UpdateGridData(_getTemplateDataFullOrEmpty);
-                tolbarArrow.IsEnabled = false;
-            }
-        }
+        #endregion
 
 
 
 
-        pr_GetItemLedger_Result _pr_GetItemLedgerFoundField;
+
+
+
+        //comboBox check/uncheck
+        private void CheckMax_EditValueChanged_1(object sender, EditValueChangedEventArgs e) => SplitEdita.IsEnabled = CheckMax.IsChecked == false ? false : true;
+
+        #region ClickFiltrAndChekEnptyFieldsAndSearch
         public void ButtonEdit_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) { CheckFieldAndSeedData(); }
         }
 
-
         void CheckFieldAndSeedData()
         {
             _pr_GetItemLedgerFoundField = new pr_GetItemLedger_Result();
             DependencyPropertyClass dpSample = (DependencyPropertyClass)Resources["KeyDependency"];
-
             foreach (var item in dpSample)
             {
 
@@ -506,7 +580,7 @@ namespace FindRestOfItemsWindows
                     }
                 }
             }
-            FoundResltFiltrProcedureDetails = GetItemsOfProcedureAll.AsQueryable().Where(QueryableExtensions.FilterKey(_pr_GetItemLedgerFoundField)).ToArray();
+            FoundResltFiltrProcedureDetails = GetItemsOfProcedureAll.AsQueryable().Where(JDE_PROD_GetDataProcedure.FilterKey(_pr_GetItemLedgerFoundField)).ToArray();
             if (FoundResltFiltrProcedureDetails.Any())
             {
                 HandleSearchResult(FoundResltFiltrProcedureDetails);
@@ -517,14 +591,8 @@ namespace FindRestOfItemsWindows
                 ItemsMoveRest.ItemsSource = null;
             }
         }
+        #endregion 
 
-        private void SortClick_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var Xname = sender as TextBlock;
-            HandleSearchResult(SortHelper((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ?
-                                               FoundResltFiltrProcedureDetails : GetItemsOfProcedureAll,
-                                           Xname.Name));
-        }
 
 
 
@@ -538,6 +606,21 @@ namespace FindRestOfItemsWindows
         }
         public static readonly DependencyProperty RecepitTimeDP = DependencyProperty.Register("NecessaryField", typeof(DateTime?), typeof(MainWindow));
 
+
+
+
+
+
+
+        #region Sort_MouseDownClick
+        private void Sort_MouseDownClick(object sender, MouseButtonEventArgs e)
+        {
+            var Xname = sender as TextBlock;
+            HandleSearchResult(SortClassHelper.SortHelper((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ?
+                                                FoundResltFiltrProcedureDetails : GetItemsOfProcedureAll,
+                                            Xname.Name));
+        }
+        #endregion
     }
 
 }
