@@ -7,7 +7,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity.Infrastructure;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ using System.Windows.Input;
 namespace FindRestOfItemsWindows
 {
 
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window , INotifyPropertyChanged
     {
 
         private pr_GetItemLedger_Result[] GetItemsOfProcedureAll = null; //  first result from procedure
@@ -599,17 +599,13 @@ namespace FindRestOfItemsWindows
 
         //Direct way create DependencyProperty
         //для TextEdit
-        public DateTime? NecessaryField
+        public string NecessaryField
         {
-            get { return (DateTime?)GetValue(RecepitTimeDP); }
+            get { return (string)GetValue(RecepitTimeDP); }
             set { SetValue(RecepitTimeDP, value); }
         }
-        public static readonly DependencyProperty RecepitTimeDP = DependencyProperty.Register("NecessaryField", typeof(DateTime?), typeof(MainWindow));
-
-
-
-
-
+        public static readonly DependencyProperty RecepitTimeDP = DependencyProperty.Register("NecessaryField", typeof(string), typeof(MainWindow));
+      
 
 
         #region Sort_MouseDownClick
@@ -619,8 +615,47 @@ namespace FindRestOfItemsWindows
             HandleSearchResult(SortClassHelper.SortHelper((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ?
                                                 FoundResltFiltrProcedureDetails : GetItemsOfProcedureAll,
                                             Xname.Name));
+
+
+
+            var user = new { Name = "Tom", Age = 34 };
+
         }
         #endregion
+
+
+
+
+
+        //Direct way INotifyPropertyChanged
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private string customerNameValue = String.Empty;
+        public string CustomerName
+        {
+            get{return customerNameValue; }
+            set
+            {
+                if (value != customerNameValue)
+                {
+                    customerNameValue = value;
+                    OnPropertyChanged(nameof(CustomerName));
+                }
+            }
+        }
+
+
+
+
+
+
     }
+
 
 }

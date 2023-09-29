@@ -93,6 +93,7 @@
     <Compile Include="ClassHelper\DataSeed.cs" />
     <Compile Include="ClassHelper\DependencyPropertyClass.cs" />
     <Compile Include="ClassHelper\ExcelHelpers.cs" />
+    <Compile Include="ClassHelper\INotifyPropertyChangedTestClass.cs" />
     <Compile Include="ClassHelper\JDE_PROD_GetDataProcedure.cs" />
     <Compile Include="ClassHelper\QueryableExtensions.cs" />
     <Compile Include="ClassHelper\SortClassHelper.cs" />

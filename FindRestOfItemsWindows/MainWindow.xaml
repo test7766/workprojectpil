@@ -7,15 +7,19 @@
         xmlns:local="clr-namespace:FindRestOfItemsWindows"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
-             xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+        xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:local1="clr-namespace:FindRestOfItemsWindows.ClassHelper"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Name="FindRestOfItemsMain"
         Title="MainWindow" Height="450" Width="800">
 
+    <Window.DataContext>
+        <local1:INotifyPropertyChangedTestClass/>
+    </Window.DataContext>
     <Window.Resources>
 
         <local1:DependencyPropertyClass x:Key="KeyDependency"/>
+
 
         <DataTemplate  x:Key="Document_NumberHeaderTemplate" >
             <StackPanel Orientation="Vertical"  Margin="-4 0 0 0" Width="100" >
@@ -167,7 +171,6 @@
                                                         EditValue="{Binding Path=Trex, Source={StaticResource KeyDependency },Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </DataTemplate>
-
         <DataTemplate x:Key="FTHeaderTemplate">
             <StackPanel Orientation="Vertical" Margin="-4 0 0 0" Width="100">
                 <TextBlock x:Name="_FT" Text="{Binding}"  TextAlignment="Center" MouseDown="Sort_MouseDownClick" />
@@ -191,6 +194,7 @@
 
     <Grid ShowGridLines="False" >
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -247,20 +251,37 @@
                                 </dxdo:LayoutGroup>
                             </dxdo:LayoutGroup>
                         </dxdo:LayoutGroup>
+                        <Label   VerticalAlignment="Center" Width="200" Height="30" Content="{Binding CustomerName , RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},UpdateSourceTrigger=PropertyChanged}"  Background="Azure"/>
+                        <!-- RelativeSource искать родительский элемент типа Window (аналогично окну приложения), чтобы найти контекст данных для привязки-->
+                        <dxe:TextEdit Name="textBox" NullText="INotifyPropertyChangedLocal"  Width="200" Height="30" Text="{Binding CustomerName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="492,5,92,5" />
+
                     </Grid>
                 </dxdo:LayoutPanel>
             </dxdo:LayoutGroup>
+            
         </dxdo:DockLayoutManager>
+        <Grid Grid.Row="2">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+                <Label   VerticalAlignment="Center" Width="200" Height="30" Content="{Binding AgeValue , UpdateSourceTrigger=PropertyChanged}"  Background="Azure"/>
+                <!-- RelativeSource искать родительский элемент типа Window (аналогично окну приложения), чтобы найти контекст данных для привязки-->
+                <dxe:TextEdit Name="textBox1" NullText="INotifyPropertyChangedOutside"  Width="200" Height="30" Text="{Binding AgeValue,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+  
 
+        </Grid>
 
-        <Grid Grid.Row="1" x:Name="PanelFiltrPagination" IsEnabled="False">
+        <Grid Grid.Row="3" x:Name="PanelFiltrPagination" IsEnabled="False">
+
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" >
-                <!--UpdateSourceTrigger=PropertyChanged когда пользователь жмет на клавишу и каждій ситмвол вносится в переменную-->
-                <!--<dxe:TextEdit Mask="T" MaskUseAsDisplayFormat="True" NullText="Обязательное заполнение" FontWeight="Normal"
-                                      EditValue="{Binding ElementName=FindRestOfItemsMain, Path=NecessaryField, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                      MaskType="DateTimeAdvancingCaret" MaskIgnoreBlank="False" MaskCulture="ru-RU" AllowNullInput="True"/>-->
+                <dxe:TextEdit Width="100"  EditValue="{Binding NecessaryField, ElementName=FindRestOfItemsMain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                
+                    <dxe:TextEdit  MaskUseAsDisplayFormat="True" NullText="DependencyPropertyLocal" FontWeight="Normal"
+                                      EditValue="{Binding NecessaryField, ElementName=FindRestOfItemsMain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                       MaskIgnoreBlank="False" MaskCulture="ru-RU" AllowNullInput="True" Background="Azure"/>
+             
+                
 
-                <dxe:CheckEdit x:Name="CheckMax" ToolTip="деактивація/активація кількість відображення елементів на сорінці" IsChecked="False" EditValueChanged="CheckMax_EditValueChanged_1" Margin="0 0 5 0">кількість</dxe:CheckEdit >
+                <dxe:CheckEdit x:Name="CheckMax" ToolTip="деактивація/активація кількість відображення елементів на сорінці" IsChecked="False" EditValueChanged="CheckMax_EditValueChanged_1" Margin="0 0 5 0" Content="кількість"/>
                 <dxe:SpinEdit x:Name="SplitEdita" ToolTip="кількість елементів, що відображаються на сторінці" Width="50" EditValue="5" Increment="1" MinValue="5" MaxValue="500" AllowSpinOnMouseWheel="False"  />
                 <dxb:ToolBarControl BarItemDisplayMode="ContentAndGlyph" UseWholeRow="True" ShowDragWidget="False" AllowCustomizationMenu="False" AllowHide="False" AllowQuickCustomization="False">
                     <dxb:BarButtonItem x:Name="ShowUsercount"    Glyph="{dx:DXImage Image=Apply_16x16.png}" RibbonStyle="Default" GlyphAlignment="Left" ItemClick="ShowUsercount_ItemClick" Content="ОК"/>
@@ -269,8 +290,7 @@
                     <dxb:BarItemSeparator />
                 </dxb:ToolBarControl>
 
-                <dxdo:LayoutGroup Orientation="Horizontal" ShowCaption="False" ItemHeight="Auto">
-                </dxdo:LayoutGroup>
+                <dxdo:LayoutGroup Orientation="Horizontal" ShowCaption="False" ItemHeight="Auto"/>
                 <dxb:ToolBarControl x:Name="tolbarArrow" BarItemDisplayMode="ContentAndGlyph" UseWholeRow="True" ShowDragWidget="False" AllowCustomizationMenu="False" AllowHide="False" AllowQuickCustomization="False" >
                     <dxb:BarButtonItem  x:Name="BTN_Home_Name"   Glyph="{dx:DXImage Image=DoublePrev_16x16.png}" RibbonStyle="Default" GlyphAlignment="Left" ItemClick="BTN_Home_Click" IsEnabled="False"/>
                     <dxb:BarButtonItem  x:Name="BTN_Previous_Name"   Glyph="{dx:DXImage Image=Prev_16x16.png}" RibbonStyle="Default" GlyphAlignment="Left" ItemClick="BTN_Previous_Click" IsEnabled="False" />
@@ -286,7 +306,7 @@
 
 
 
-        <Grid Grid.Row="3" >
+        <Grid Grid.Row="4" >
             <dxdo:LayoutPanel ShowCaption="false" Caption="Склад"  ItemHeight="65*"  ShowCloseButton="False" ShowPinButton="False" >
                 <dxg:GridControl x:Name="ItemsMoveRest"  Uid="55B558D8-70B2-47E7-9527-DF3C48759AC0" ClipboardCopyMode="ExcludeHeader" IsEnabled="True" AllowMRUFilterList="False" AllowColumnMRUFilterList="False" IsFilterEnabled="False">
                     <dxg:GridControl.View>

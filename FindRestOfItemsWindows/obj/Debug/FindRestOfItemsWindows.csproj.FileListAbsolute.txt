@@ -148,3 +148,4 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.c
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csproj.CopyComplete
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.exe
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.pdb
+C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csprojAssemblyReference.cache
