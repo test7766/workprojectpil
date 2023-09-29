@@ -78,6 +78,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Dictionarys\MyDictionary1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ExportExelDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,6 +102,7 @@
     <Compile Include="ClassHelper\QueryableExtensions.cs" />
     <Compile Include="ClassHelper\SortClassHelper.cs" />
     <Compile Include="Core\JDE_PRODEntities.cs" />
+    <Compile Include="Dictionarys\MyResourceDictionary.cs" />
     <Compile Include="ExportExelDialog.xaml.cs">
       <DependentUpon>ExportExelDialog.xaml</DependentUpon>
     </Compile>
@@ -106,6 +111,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MyDictionary1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\pr_GetItemLedger_Result.cs" />

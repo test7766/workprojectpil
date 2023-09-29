@@ -2,6 +2,7 @@
 using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Grid;
 using FindRestOfItemsWindows.ClassHelper;
+using FindRestOfItemsWindows.Dictionarys;
 using FindRestOfItemsWindows.Model;
 using Microsoft.Win32;
 using System;
@@ -21,14 +22,18 @@ namespace FindRestOfItemsWindows
     public partial class MainWindow : Window , INotifyPropertyChanged
     {
 
-        private pr_GetItemLedger_Result[] GetItemsOfProcedureAll = null; //  first result from procedure
         private pr_GetItemLedger_Result _pr_GetItemLedgerFoundField; //switch
-        private pr_GetItemLedger_Result[] FoundResltFiltrProcedureDetails; //result for filter
         private int pageSize = 25;
         private int currentPage = 1;
         private ObservableCollection<pr_GetItemLedger_Result> PartDataGrid = new ObservableCollection<pr_GetItemLedger_Result>();
         private int CurrentIndexData = 0;
         private int BuferSizeData = 25;
+
+     
+
+        public pr_GetItemLedger_Result[] FoundResltFiltrProcedureDetails { get; private set; }
+        public pr_GetItemLedger_Result[] GetItemsOfProcedureAll { get; private set; } //  first result from procedure
+
 
 
 
@@ -39,16 +44,19 @@ namespace FindRestOfItemsWindows
 
             txtEditLOTN.Text = "Test";
             txteditLOCN.Text = "Test";
+
+         
+
         }
 
-        public MainWindow(string ITM, string _mcu="tet", string _LOCN ="test", string _LOTN="tets")
+        public MainWindow(string ITM,  string _LOCN, string _LOTN, string _mcu = "tet")
         {
             InitializeComponent();
             ItemsMoveRest.IsEnabled = false;
             txtEditITM.Text = ITM;                           //id товара
             txtEditMCU.Text = _mcu;                          //id склада         char(12)
             txtEditLOTN.Text = _LOTN.Trim();                  //партия            char(30)
-            txteditLOCN.Text = _LOCN.Trim();                   // Место склада     char(20)
+            txteditLOCN.Text = _LOCN;
 
         }
 
@@ -60,8 +68,7 @@ namespace FindRestOfItemsWindows
         private void ExportSelectFindRestOfItems_Executed(object sender, ItemClickEventArgs e)
         {
             ExportExelDialog exportExelDialog;
-
-
+           
             if (CheckMax.IsChecked != true)
             {
                 exportExelDialog = new ExportExelDialog();
@@ -150,6 +157,7 @@ namespace FindRestOfItemsWindows
         private void ExportSelectFindRestOfItems_Executed(object sender, ExecutedRoutedEventArgs e)
         {
 
+
             try
             {
                 var openWinwow = new SaveFileDialog
@@ -194,8 +202,12 @@ namespace FindRestOfItemsWindows
 
 
       
-        
-    
+
+
+
+
+
+
 
 
 
@@ -241,12 +253,13 @@ namespace FindRestOfItemsWindows
             string LOTN = txtEditLOTN.Text.ToString();              //партия            char(30)
             string LOCN = txteditLOCN.Text.ToString();              // Место склада     char(20)
             await LoadDataAsync(ITM, MCU, LOTN, LOCN);
+            testDatastatic = "initializeData";
             HandleSearchResult(GetItemsOfProcedureAll);
 
         }
         #endregion
 
-
+        public  string testDatastatic;
 
 
 
@@ -344,7 +357,7 @@ namespace FindRestOfItemsWindows
         }
         #endregion
         #region Chekbox_checking_elements_on_the_page
-        private void HandleSearchResult(pr_GetItemLedger_Result[] _getTemplateDataFullOrEmpty)
+        public void HandleSearchResult(pr_GetItemLedger_Result[] _getTemplateDataFullOrEmpty)
         {
             currentPage = 1;
             if (CheckMax.IsChecked != true)
@@ -500,7 +513,9 @@ namespace FindRestOfItemsWindows
             if (e.Key == Key.Enter) { CheckFieldAndSeedData(); }
         }
 
-        void CheckFieldAndSeedData()
+      
+
+      public  void CheckFieldAndSeedData()
         {
             _pr_GetItemLedgerFoundField = new pr_GetItemLedger_Result();
             DependencyPropertyClass dpSample = (DependencyPropertyClass)Resources["KeyDependency"];
@@ -653,8 +668,9 @@ namespace FindRestOfItemsWindows
 
 
 
+     
 
-
+      
     }
 
 
