@@ -9,6 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,7 +23,7 @@ using System.Windows.Input;
 namespace FindRestOfItemsWindows
 {
 
-    public partial class MainWindow : Window , INotifyPropertyChanged
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
         private pr_GetItemLedger_Result _pr_GetItemLedgerFoundField; //switch
@@ -29,10 +33,12 @@ namespace FindRestOfItemsWindows
         private int CurrentIndexData = 0;
         private int BuferSizeData = 25;
 
-     
+        public ObservableCollection<pr_GetItemLedger_Result> testcolection = new ObservableCollection<pr_GetItemLedger_Result>();
 
         public pr_GetItemLedger_Result[] FoundResltFiltrProcedureDetails { get; private set; }
         public pr_GetItemLedger_Result[] GetItemsOfProcedureAll { get; private set; } //  first result from procedure
+
+        public ObservableCollection<pr_GetItemLedger_Result> GetItemsOfProcedureAll2 { get; private set; } //  first result from procedure
 
 
 
@@ -40,16 +46,23 @@ namespace FindRestOfItemsWindows
         public MainWindow()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             ItemsMoveRest.IsEnabled = false;
+            txtEditMCU.Text = "       01LA1";
+            txtEditITM.Text = "158";
+            txtEditLOTN.Text = "202307111662";
+            txteditLOCN.Text = "EXP ED";
 
-            txtEditLOTN.Text = "Test";
-            txteditLOCN.Text = "Test";
-
-         
 
         }
 
-        public MainWindow(string ITM,  string _LOCN, string _LOTN, string _mcu = "tet")
+
+
+
+
+
+
+        public MainWindow(string ITM, string _LOCN, string _LOTN, string _mcu = "tet")
         {
             InitializeComponent();
             ItemsMoveRest.IsEnabled = false;
@@ -67,8 +80,25 @@ namespace FindRestOfItemsWindows
         //EXPORT Exel
         private void ExportSelectFindRestOfItems_Executed(object sender, ItemClickEventArgs e)
         {
+
+
+
+            var updateing = testcolection.FirstOrDefault(x => x.Doc_Co != textBox2.Text);
+            if (updateing != null)
+            {
+                updateing.Doc_Co = textBox2.Text;
+            }
+            else
+            {
+                var testdata = new pr_GetItemLedger_Result { Doc_Co = textBox2.Text };
+
+                testcolection.Add(testdata);
+            }
+
+
+
             ExportExelDialog exportExelDialog;
-           
+
             if (CheckMax.IsChecked != true)
             {
                 exportExelDialog = new ExportExelDialog();
@@ -87,22 +117,22 @@ namespace FindRestOfItemsWindows
                     else
                     {
 
-                        HandlerExportExel((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ? 
+                        HandlerExportExel((FoundResltFiltrProcedureDetails != null && FoundResltFiltrProcedureDetails.Any()) ?
                             FoundResltFiltrProcedureDetails :
                             GetItemsOfProcedureAll);
 
                     }
                 }
-                else{MessageBox.Show("Експорт відміненно!!!");}
+                else { MessageBox.Show("Експорт відміненно!!!"); }
             }
-            else { HandlerExportExel();}
+            else { HandlerExportExel(); }
 
         }
 
 
 
 
-        void HandlerExportExel(pr_GetItemLedger_Result[] Spitdata =null)
+        void HandlerExportExel(pr_GetItemLedger_Result[] Spitdata = null)
         {
             try
             {
@@ -129,7 +159,7 @@ namespace FindRestOfItemsWindows
                         }
                 }
                 else
-                {                
+                {
                     foreach (var col in ItemsMoveRest?.Columns.Where(p => !p.Visible))
                     {
                         col_prev_state.Add(col);
@@ -143,7 +173,7 @@ namespace FindRestOfItemsWindows
                             col.Visible = false;
                         }
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -201,20 +231,11 @@ namespace FindRestOfItemsWindows
 
 
 
-      
-
-
-
-
-
-
-
-
 
 
 
         // GET Data 
-        public  pr_GetItemLedger_Result[] GetItemDetails(int? ITM, string mCU, string lOTN, string lOCN)
+        public pr_GetItemLedger_Result[] GetItemDetails(int? ITM, string mCU, string lOTN, string lOCN)
         {
             try
             {
@@ -252,14 +273,17 @@ namespace FindRestOfItemsWindows
             string MCU = txtEditMCU.Text.ToString();                //id склада         char(12)
             string LOTN = txtEditLOTN.Text.ToString();              //партия            char(30)
             string LOCN = txteditLOCN.Text.ToString();              // Место склада     char(20)
+
+
+
             await LoadDataAsync(ITM, MCU, LOTN, LOCN);
-            testDatastatic = "initializeData";
-            HandleSearchResult(GetItemsOfProcedureAll);
+         //  await LoadDataAsyncNativeSql(ITM, MCU, LOTN, LOCN);
+           HandleSearchResult(GetItemsOfProcedureAll);
 
         }
         #endregion
 
-        public  string testDatastatic;
+      
 
 
 
@@ -284,7 +308,9 @@ namespace FindRestOfItemsWindows
         {
             try
             {
-                FindRestOfItemLoadingDecorator1.DeferedVisibility = true;
+
+                //Need EDM STRUCTURE
+                //FindRestOfItemLoadingDecorator1.DeferedVisibility = true;
 
                 //var ResultItemsFromProcedureMethodTemp = await Task.Run(async () =>
                 //{
@@ -296,8 +322,11 @@ namespace FindRestOfItemsWindows
                 //    }
                 //});
 
-              //  GetItemsOfProcedureAll = ResultItemsFromProcedureMethodTemp.ToArray();
+                //GetItemsOfProcedureAll = ResultItemsFromProcedureMethodTemp.ToArray();
+
+
                 GetItemsOfProcedureAll = DataSeed.pr_GetItemLedger_Results_procedure.ToArray();
+                GetItemsOfProcedureAll2 = DataSeed.pr_GetItemLedger_Results_procedure2;
                 if (!GetItemsOfProcedureAll.Any())
                 {
                     MessageBox.Show($"Історії переміщень не знайденно!", "Увага!", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -324,11 +353,126 @@ namespace FindRestOfItemsWindows
 
 
 
+
+        #region NativeSQL
+        public async Task LoadDataAsyncNativeSql(int ITM, string MCU, string LOTN, string LOCN)
+        {
+            try
+            {
+                FindRestOfItemLoadingDecorator1.DeferedVisibility = true;
+                List<pr_GetItemLedger_Result> GetItemsOfProcedureAll2 = new List<pr_GetItemLedger_Result>();
+                string connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string sqlQuery = $@"SELECT 
+                    Document_Number = ildoc,
+                    Doc_Type = ildct,
+                    Doc_Co = ilkco,
+                    Transaction_Date = dbo.fn_Jul2DT (iltrdj),
+                    Branch_Plant  = ilmcu,
+                    Quantity      = iltrqt,
+                    Trans_UoM     = iltrum ,
+                    Unit_Cost     = iluncs/10000,
+                    Extended_Cost = ilpaid/100,
+                    Lot_Serial    = illotn,
+                    [Location]    = illocn,
+                    Lot_Status_Code      = illots,
+                    Order_Number  = ildoco,
+                    Order_Ty      = ildcto,
+                    Order_Co      = ilkcoo,
+                    LineNum  = illnid ,
+                    Class_Code    = ildgl, 
+                    GL_Date       = dbo.fn_Jul2DT (ildgl),
+                    Supplier_Lot_Number = iorlot ,
+                    Trex = ILTREX ,
+                    FT =  ILFRTO 
+                FROM 
+                    jde_prod.optmdta.f4111 WITH(NOLOCK)
+                LEFT JOIN 
+                    jde_prod.optmdta.f4108 WITH(NOLOCK) 
+                ON 
+                    iomcu = ilmcu 
+                    AND ioitm = ilitm 
+                    AND iolotn = illotn
+                WHERE 
+                    ilmcu = '{MCU}' 
+                    AND ilitm = {ITM}
+                    AND illocn = '{LOCN}'
+                    AND illotn = {LOTN}";
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                GetItemsOfProcedureAll2.Add(new pr_GetItemLedger_Result
+                                {
+                                    Document_Number = (double?)reader["Document_Number"],
+                                    Doc_Type = reader["Doc_Type"].ToString(),
+                                    Doc_Co = reader["Doc_Co"].ToString(),
+                                    Transaction_Date = Convert.ToDateTime(reader["Transaction_Date"]),
+                                    Branch_Plant = reader["Document_Number"].ToString(),
+                                    Quantity = (double?)reader["Quantity"],
+                                    Trans_UoM = reader["Trans_UoM"].ToString(),
+                                    Extended_Cost = (double?)reader["Extended_Cost"],
+                                    Lot_Serial = reader["Lot_Serial"].ToString(),
+                                    Location = reader["Location"].ToString(),
+                                    Lot_Status_Code = reader["Lot_Status_Code"].ToString(),
+                                    Order_Number = (double)reader["Order_Number"],
+                                    Order_Ty = reader["Order_Ty"].ToString(),
+                                    Order_Co = reader["Order_Co"].ToString(),
+                                    LineNum = (double)reader["LineNum"],
+                                    Class_Code = reader["Class_Code"].ToString(),
+                                    GL_Date = Convert.ToDateTime(reader["GL_Date"]),
+                                    Supplier_Lot_Number = reader["Supplier_Lot_Number"].ToString(),
+                                    Trex = reader["Trex"].ToString(),
+                                    FT = reader["FT"].ToString()
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                GetItemsOfProcedureAll = GetItemsOfProcedureAll2.ToArray();
+                FindRestOfItemLoadingDecorator1.DeferedVisibility = false;
+                ItemsMoveRest.IsEnabled = true;
+                PanelFiltrPagination.IsEnabled = true;
+
+                if (!GetItemsOfProcedureAll.Any())
+                {
+                    MessageBox.Show($"Історії переміщень не знайденно!", "Увага!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    FindRestOfItemLoadingDecorator1.DeferedVisibility = false;
+                    ItemsMoveRest.IsEnabled = true;
+                    PanelFiltrPagination.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #endregion
+
+
+
+
+
+
+
         #region TakePartDataFromProcedureAndLoadDataGrid
         private void LoadNextBatch()
         {
             PartDataGrid.Clear();
-            var batch = GetItemsOfProcedureAll.Skip(CurrentIndexData).Take(BuferSizeData);
+            var batch = GetItemsOfProcedureAll2.Skip(CurrentIndexData).Take(BuferSizeData);
             foreach (var item in batch)
                 PartDataGrid.Add(item);
         }
@@ -513,9 +657,9 @@ namespace FindRestOfItemsWindows
             if (e.Key == Key.Enter) { CheckFieldAndSeedData(); }
         }
 
-      
 
-      public  void CheckFieldAndSeedData()
+
+        public void CheckFieldAndSeedData()
         {
             _pr_GetItemLedgerFoundField = new pr_GetItemLedger_Result();
             DependencyPropertyClass dpSample = (DependencyPropertyClass)Resources["KeyDependency"];
@@ -620,7 +764,7 @@ namespace FindRestOfItemsWindows
             set { SetValue(RecepitTimeDP, value); }
         }
         public static readonly DependencyProperty RecepitTimeDP = DependencyProperty.Register("NecessaryField", typeof(string), typeof(MainWindow));
-      
+
 
 
         #region Sort_MouseDownClick
@@ -654,7 +798,7 @@ namespace FindRestOfItemsWindows
         private string customerNameValue = String.Empty;
         public string CustomerName
         {
-            get{return customerNameValue; }
+            get { return customerNameValue; }
             set
             {
                 if (value != customerNameValue)
@@ -668,9 +812,9 @@ namespace FindRestOfItemsWindows
 
 
 
-     
 
-      
+
+
     }
 
 

@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -78,7 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Dictionarys\MyDictionary1.xaml">
+    <Page Include="Resource\MyDictionary1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -102,7 +103,7 @@
     <Compile Include="ClassHelper\QueryableExtensions.cs" />
     <Compile Include="ClassHelper\SortClassHelper.cs" />
     <Compile Include="Core\JDE_PRODEntities.cs" />
-    <Compile Include="Dictionarys\MyResourceDictionary.cs" />
+    <Compile Include="Resource\MyResourceDictionary.cs" />
     <Compile Include="ExportExelDialog.xaml.cs">
       <DependentUpon>ExportExelDialog.xaml</DependentUpon>
     </Compile>

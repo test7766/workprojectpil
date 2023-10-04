@@ -62,42 +62,42 @@ namespace FindRestOfItemsWindows.ClassHelper
         //    }
         //}
 
-        public static void Export(DataTable _dataSource, string fileName, string _NamePage = null)
-        {
-            DevExpress.Xpf.Grid.GridControl expGrid = new DevExpress.Xpf.Grid.GridControl();
-            expGrid.AutoGenerateColumns = AutoGenerateColumnsMode.AddNew;
-            expGrid.View = new TableView();
+        //public static void Export(DataTable _dataSource, string fileName, string _NamePage = null)
+        //{
+        //    DevExpress.Xpf.Grid.GridControl expGrid = new DevExpress.Xpf.Grid.GridControl();
+        //    expGrid.AutoGenerateColumns = AutoGenerateColumnsMode.AddNew;
+        //    expGrid.View = new TableView();
 
-            try
-            {
-                if (String.IsNullOrWhiteSpace(fileName))
-                    throw new Exception("Сохранение невозможно!\nНеобходимо указать имя файла!");
+        //    try
+        //    {
+        //        if (String.IsNullOrWhiteSpace(fileName))
+        //            throw new Exception("Сохранение невозможно!\nНеобходимо указать имя файла!");
 
-                expGrid.ItemsSource = _dataSource;
+        //        expGrid.ItemsSource = _dataSource;
 
-                if (!String.IsNullOrWhiteSpace(_NamePage))
-                    expGrid.View.Name = _NamePage;
+        //        if (!String.IsNullOrWhiteSpace(_NamePage))
+        //            expGrid.View.Name = _NamePage;
 
-                expGrid.View.ExportToXlsx(fileName);
+        //        expGrid.View.ExportToXlsx(fileName);
 
-                if (MessageBox.Show(String.Format("Экспорт успешно завершен.{0}Открыть сохраненный файл?", Environment.NewLine), "Експорт", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-                    Process.Start(fileName);
-            }
-            catch (Exception ex)
-            {
-                var msg = ex.InnerException ?? ex;
-                MessageBox.Show(msg.Message, "Експорт", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                expGrid.ItemsSource = null;
-                expGrid = null;
-            }
-        }
+        //        if (MessageBox.Show(String.Format("Экспорт успешно завершен.{0}Открыть сохраненный файл?", Environment.NewLine), "Експорт", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+        //            Process.Start(fileName);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var msg = ex.InnerException ?? ex;
+        //        MessageBox.Show(msg.Message, "Експорт", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //    finally
+        //    {
+        //        expGrid.ItemsSource = null;
+        //        expGrid = null;
+        //    }
+        //}
 
         public static void Export(IList _dataSource, string fileName)
         {
-            DevExpress.Xpf.Grid.GridControl expGrid = new DevExpress.Xpf.Grid.GridControl();
+            GridControl expGrid = new GridControl();
             expGrid.AutoGenerateColumns = AutoGenerateColumnsMode.AddNew;
             expGrid.View = new TableView();
 
@@ -110,7 +110,7 @@ namespace FindRestOfItemsWindows.ClassHelper
 
                 expGrid.View.ExportToXlsx(fileName);
 
-                if (MessageBox.Show(String.Format("Экспорт успешно завершен.{0}Открыть сохраненный файл?", Environment.NewLine), "Експорт", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                if (MessageBox.Show(string.Format("Экспорт успешно завершен.{0}Открыть сохраненный файл?", Environment.NewLine), "Експорт", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                     Process.Start(fileName);
             }
             catch (Exception ex)
@@ -130,14 +130,14 @@ namespace FindRestOfItemsWindows.ClassHelper
         {
             try
             {
-                if (String.IsNullOrWhiteSpace(fileName))
+                if (string.IsNullOrWhiteSpace(fileName))
                     throw new Exception("Збереження не можливе!\nНеобхідно вказати найменування файлу!");
 
                 if (dataViewBase == null) throw new Exception("Джерело даних не вказане!");
 
                 dataViewBase.ExportToXlsx(fileName);
 
-                if (ViewFile && MessageBox.Show(String.Format("Експорт успішно завершено.{0}Відкрити збережений файл?", Environment.NewLine), "Експорт", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                if (ViewFile && MessageBox.Show(string.Format("Експорт успішно завершено.{0}Відкрити збережений файл?", Environment.NewLine), "Експорт", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                     Process.Start(fileName);
 
                 return true;
@@ -149,5 +149,9 @@ namespace FindRestOfItemsWindows.ClassHelper
                 return false;
             }
         }
+
+
+
+
     }
 }

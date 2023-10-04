@@ -9,22 +9,30 @@
         xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:local1="clr-namespace:FindRestOfItemsWindows.ClassHelper"
-        mc:Ignorable="d" Name="FindRestOfItemsMain"
+        mc:Ignorable="d" Name="FindRestOfItemsMain" 
         Title="MainWindow" Height="450" Width="800">
 
-   
+
+
+ 
+
     <Window.DataContext>
         <local1:INotifyPropertyChangedTestClass/>
     </Window.DataContext>
+    
+    
     <Window.Resources>
 
         <!--<local1:DependencyPropertyClass x:Key="KeyDependency"/>-->
 
 
-
+        
+        
+        
+        
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Dictionarys/MyDictionary1.xaml"/>
+                <ResourceDictionary Source="Resource/MyDictionary1.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
@@ -268,6 +276,9 @@
                 <Label   VerticalAlignment="Center" Width="200" Height="30" Content="{Binding AgeValue , UpdateSourceTrigger=PropertyChanged}"  Background="Azure"/>
                 <!-- RelativeSource искать родительский элемент типа Window (аналогично окну приложения), чтобы найти контекст данных для привязки-->
                 <dxe:TextEdit Name="textBox1" NullText="INotifyPropertyChangedOutside"  Width="200" Height="30" Text="{Binding AgeValue,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <dxe:TextEdit Name="textBox2" Width="200" Height="30" Text="{Binding Doc_Co, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
+                <dxe:TextEdit Name="textBox3" Width="200" Height="30" Background="Bisque" Text="{Binding Document_Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
+
             </StackPanel>
   
 

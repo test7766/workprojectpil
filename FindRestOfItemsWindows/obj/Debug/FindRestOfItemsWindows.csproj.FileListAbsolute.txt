@@ -133,14 +133,14 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\de\DevExpress.Pdf.v17.1.
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\es\DevExpress.Pdf.v17.1.Core.resources.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\ja\DevExpress.Pdf.v17.1.Core.resources.dll
 C:\proj\workprojectpil\FindRestOfItemsWindows\bin\Debug\ru\DevExpress.Pdf.v17.1.Core.resources.dll
-C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\Dictionarys\MyDictionary1.g.cs
+C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\Resource\MyDictionary1.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\ExportExelDialog.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\MainWindow.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\App.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows_MarkupCompile.cache
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows_MarkupCompile.lref
-C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\Dictionarys\MyDictionary1.baml
+C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\Resource\MyDictionary1.baml
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\ExportExelDialog.baml
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\MainWindow.baml
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\MyDictionary1.baml
@@ -151,4 +151,4 @@ C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.c
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csproj.CopyComplete
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.exe
 C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.pdb
-C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csprojAssemblyReference.cache
+C:\proj\workprojectpil\FindRestOfItemsWindows\obj\Debug\FindRestOfItemsWindows.csproj.AssemblyReference.cache
